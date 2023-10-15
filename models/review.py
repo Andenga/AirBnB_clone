@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """Defines the Review class."""
-from models.base_model import BaseModel
+from models.base_model import BaseModel  # Import the BaseModel class
 
 # Define the Review class, which inherits from BaseModel
 class Review(BaseModel):
@@ -12,7 +12,7 @@ class Review(BaseModel):
         text (str): The written content of the review.
     """
 
-    place_id = ""  # Initialize place_id attribute as an empty string
-    user_id = ""   # Initialize user_id attribute as an empty string
-    text = ""      # Initialize text attribute as an empty string
+    place_id = ""  # Initialize the 'place_id' attribute as an empty string
+    user_id = ""   # Initialize the 'user_id' attribute as an empty string
+    text = ""      # Initialize the 'text' attribute as an empty string
 

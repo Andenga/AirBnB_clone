@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """Defines the BaseModel class."""
-import models
-from uuid import uuid4
-from datetime import datetime
+import models  # Import the 'models' module
+from uuid import uuid4  # Import 'uuid4' for generating unique IDs
+from datetime import datetime  # Import 'datetime' for timestamp handling
 
 # Define the BaseModel class
 class BaseModel:
