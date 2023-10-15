@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""Defines the MyConsole class for the HBnB project."""
-
+"""Defines the Custom Console for Holberton BnB."""
 import cmd
 import re
 from shlex import split
@@ -13,197 +12,203 @@ from models.place import Place
 from models.amenity import Amenity
 from models.review import Review
 
-# A helper function to parse arguments
-def parse(arg):
-    curly_braces = re.search(r"\{(.*?)\}", arg)
-    brackets = re.search(r"\[(.*?)\]", arg)
+
+def parse_arguments(argument_string):
+    curly_braces = re.search(r"\{(.*?)\}", argument_string)
+    brackets = re.search(r"\[(.*?)\]", argument_string)
     if curly_braces is None:
         if brackets is None:
-            return [i.strip(",") for i in split(arg)]
+            return [i.strip(",") for i in split(argument_string)]
         else:
-            lexer = split(arg[:brackets.span()[0]])
-            retl = [i.strip(",") for i in lexer]
-            retl.append(brackets.group())
-            return retl
+            lexer = split(argument_string[:brackets.span()[0]])
+            result_list = [i.strip(",") for i in lexer]
+            result_list.append(brackets.group())
+            return result_list
     else:
-        lexer = split(arg[:curly_braces.span()[0]])
-        retl = [i.strip(",") for i in lexer]
-        retl.append(curly_braces.group())
-        return retl
+        lexer = split(argument_string[:curly_braces.span()[0]])
+        result_list = [i.strip(",") for i in lexer]
+        result_list.append(curly_braces.group())
+        return result_list
 
-class MyConsole(cmd.Cmd):
-    """Defines the MyConsole class for the HBnB project.
+
+class CustomConsole(cmd.Cmd):
+    """Custom console for the Holberton BnB project.
 
     Attributes:
         prompt (str): The command prompt.
     """
 
-    prompt = "(myconsole) "
+    prompt = "(hbnb) "
     __classes = {
-        "MyBaseModel",
-        "MyUser",
-        "MyState",
-        "MyCity",
-        "MyPlace",
-        "MyAmenity",
-        "MyReview"
+        "BaseModel",
+        "User",
+        "State",
+        "City",
+        "Place",
+        "Amenity",
+        "Review"
     }
 
     def emptyline(self):
-        """Do nothing upon receiving an empty line."""
+        """Do nothing when an empty line is entered."""
         pass
 
-    def default(self, arg):
-        """Default behavior for cmd module when input is invalid"""
-        argdict = {
-            "myall": self.do_myall,
-            "myshow": self.do_myshow,
-            "mydestroy": self.do_mydestroy,
-            "mycount": self.do_mycount,
-            "myupdate": self.do_myupdate
+    def default(self, argument):
+        """Default behavior for cmd module when input is invalid."""
+        argument_dict = {
+            "all": self.do_show_all,
+            "show": self.do_show,
+            "destroy": self.do_destroy,
+            "count": self.do_count,
+            "update": self.do_update
         }
-        match = re.search(r"\.", arg)
+        match = re.search(r"\.", argument)
         if match is not None:
-            argl = [arg[:match.span()[0], arg[match.span()[1]:]]]
-            match = re.search(r"\((.*?)\)", argl[1])
+            argument_list = [argument[:match.span()[0]], argument[match.span()[1]:]]
+            match = re.search(r"\((.*?)\)", argument_list[1])
             if match is not None:
-                command = [argl[1][:match.span()[0]], match.group()[1:-1]]
-                if command[0] in argdict.keys():
-                    call = "{} {}".format(argl[0], command[1])
-                    return argdict[command[0]](call)
-        print("*** Unknown syntax: {}".format(arg))
+                command = [argument_list[1][:match.span()[0]], match.group()[1:-1]]
+                if command[0] in argument_dict.keys():
+                    call = "{} {}".format(argument_list[0], command[1])
+                    return argument_dict[command[0]](call)
+        print("*** Unknown syntax: {}".format(argument))
         return False
 
-    def do_quit(self, arg):
+    def do_quit(self, argument):
         """Quit command to exit the program."""
         return True
 
-    def do_EOF(self, arg):
+    def do_EOF(self, argument):
         """EOF signal to exit the program."""
         print("")
         return True
 
-    def do_create(self, arg):
+    def do_create(self, argument):
         """Usage: create <class>
         Create a new class instance and print its id.
         """
-        argl = parse(arg)
-        if len(argl) == 0:
+        argument_list = parse_arguments(argument)
+        if len(argument_list) == 0:
             print("** class name missing **")
-        elif argl[0] not in MyConsole.__classes:
+        elif argument_list[0] not in CustomConsole.__classes:
             print("** class doesn't exist **")
         else:
-            print(eval(argl[0])().id)
+            new_instance = eval(argument_list[0])()
+            print(new_instance.id)
             storage.save()
 
-    def do_myshow(self, arg):
-        """Usage: myshow <class> <id> or <class>.myshow(<id>)
+    def do_show(self, argument):
+        """Usage: show <class> <id> or <class>.show(<id>)
         Display the string representation of a class instance of a given id.
         """
-        argl = parse(arg)
-        objdict = storage.all()
-        if len(argl) == 0:
+        argument_list = parse_arguments(argument)
+        obj_dict = storage.all()
+        if len(argument_list) == 0:
             print("** class name missing **")
-        elif argl[0] not in MyConsole.__classes:
+        elif argument_list[0] not in CustomConsole.__classes:
             print("** class doesn't exist **")
-        elif len(argl) == 1:
+        elif len(argument_list) == 1:
             print("** instance id missing **")
-        elif "{}.{}".format(argl[0], argl[1]) not in objdict:
+        elif "{}.{}".format(argument_list[0], argument_list[1]) not in obj_dict:
             print("** no instance found **")
         else:
-            print(objdict["{}.{}".format(argl[0], argl[1])])
+            print(obj_dict["{}.{}".format(argument_list[0], argument_list[1])])
 
-    def do_mydestroy(self, arg):
-        """Usage: mydestroy <class> <id> or <class>.mydestroy(<id>)
+    def do_destroy(self, argument):
+        """Usage: destroy <class> <id> or <class>.destroy(<id>)
         Delete a class instance of a given id."""
-        argl = parse(arg)
-        objdict = storage.all()
-        if len(argl) == 0:
+        argument_list = parse_arguments(argument)
+        obj_dict = storage.all()
+        if len(argument_list) == 0:
             print("** class name missing **")
-        elif argl[0] not in MyConsole.__classes:
+        elif argument_list[0] not in CustomConsole.__classes:
             print("** class doesn't exist **")
-        elif len(argl) == 1:
+        elif len(argument_list) == 1:
             print("** instance id missing **")
-        elif "{}.{}".format(argl[0], argl[1]) not in objdict.keys():
+        elif "{}.{}".format(argument_list[0], argument_list[1]) not in obj_dict.keys():
             print("** no instance found **")
         else:
-            del objdict["{}.{}".format(argl[0], argl[1])]
+            del obj_dict["{}.{}".format(argument_list[0], argument_list[1])]
             storage.save()
 
-    def do_myall(self, arg):
-        """Usage: myall or myall <class> or <class>.myall()
+    def do_show_all(self, argument):
+        """Usage: all or all <class> or <class>.all()
         Display string representations of all instances of a given class.
-        If no class is specified, displays all instantiated objects."""
-        argl = parse(arg)
-        if len(argl) > 0 and argl[0] not in MyConsole.__classes:
+        If no class is specified, displays all instantiated objects.
+        """
+        argument_list = parse_arguments(argument)
+        if len(argument_list) > 0 and argument_list[0] not in CustomConsole.__classes:
             print("** class doesn't exist **")
         else:
-            objl = []
+            object_list = []
             for obj in storage.all().values():
-                if len(argl) > 0 and argl[0] == obj.__class__.__name__:
-                    objl.append(obj.__str__())
-                elif len(argl) == 0:
-                    objl.append(obj.__str__())
-            print(objl)
+                if len(argument_list) > 0 and argument_list[0] == obj.__class__.__name__:
+                    object_list.append(obj.__str__())
+                elif len(argument_list) == 0:
+                    object_list.append(obj.__str__)
+            print(object_list)
 
-    def do_mycount(self, arg):
-        """Usage: mycount <class> or <class>.mycount()
-        Retrieve the number of instances of a given class."""
-        argl = parse(arg)
+    def do_count(self, argument):
+        """Usage: count <class> or <class>.count()
+        Retrieve the number of instances of a given class.
+        """
+        argument_list = parse_arguments(argument)
         count = 0
         for obj in storage.all().values():
-            if argl[0] == obj.__class__.__name__:
+            if argument_list[0] == obj.__class__.__name__:
                 count += 1
         print(count)
 
-    def do_myupdate(self, arg):
-        """Usage: myupdate <class> <id> <attribute_name> <attribute_value> or
-       <class>.myupdate(<id>, <attribute_name>, <attribute_value>) or
-       <class>.myupdate(<id>, <dictionary>)
+    def do_update(self, argument):
+        """Usage: update <class> <id> <attribute_name> <attribute_value> or
+       <class>.update(<id>, <attribute_name>, <attribute_value>) or
+       <class>.update(<id>, <dictionary>)
         Update a class instance of a given id by adding or updating
-        a given attribute key/value pair or dictionary."""
-        argl = parse(arg)
-        objdict = storage.all()
+        a given attribute key/value pair or dictionary.
+        """
+        argument_list = parse_arguments(argument)
+        obj_dict = storage.all()
 
-        if len(argl) == 0:
+        if len(argument_list) == 0:
             print("** class name missing **")
             return False
-        if argl[0] not in MyConsole.__classes:
+        if argument_list[0] not in CustomConsole.__classes:
             print("** class doesn't exist **")
             return False
-        if len(argl) == 1:
+        if len(argument_list) == 1:
             print("** instance id missing **")
             return False
-        if "{}.{}".format(argl[0], argl[1]) not in objdict.keys():
+        if "{}.{}".format(argument_list[0], argument_list[1]) not in obj_dict.keys():
             print("** no instance found **")
             return False
-        if len(argl) == 2:
+        if len(argument_list) == 2:
             print("** attribute name missing **")
             return False
-        if len(argl) == 3:
+        if len(argument_list) == 3:
             try:
-                type(eval(argl[2])) != dict
+                type(eval(argument_list[2])) != dict
             except NameError:
                 print("** value missing **")
                 return False
 
-        if len(argl) == 4:
-            obj = objdict["{}.{}".format(argl[0], argl[1])]
-            if argl[2] in obj.__class__.__dict__.keys():
-                valtype = type(obj.__class__.__dict__[argl[2]])
-                obj.__dict__[argl[2]] = valtype(argl[3])
+        if len(argument_list) == 4:
+            obj = obj_dict["{}.{}".format(argument_list[0], argument_list[1])]
+            if argument_list[2] in obj.__class__.__dict__.keys():
+                val_type = type(obj.__class__.__dict__[argument_list[2]])
+                obj.__dict__[argument_list[2]] = val_type(argument_list[3])
             else:
-                obj.__dict__[argl[2]] = argl[3]
-        elif type(eval(argl[2])) == dict:
-            obj = objdict["{}.{}".format(argl[0], argl[1])]
-            for k, v in eval(argl[2]).items():
-                if (k in obj.__class__.__dict__.keys() and
-                        type(obj.__class__.__dict__[k]) in {str, int, float}):
-                    valtype = type(obj.__class__.__dict__[k])
-                    obj.__dict__[k] = valtype(v)
+                obj.__dict__[argument_list[2]] = argument_list[3]
+        elif type(eval(argument_list[2])) == dict:
+            obj = obj_dict["{}.{}".format(argument_list[0], argument_list[1])]
+            for key, value in eval(argument_list[2]).items():
+                if (key in obj.__class__.__dict__.keys() and
+                        type(obj.__class__.__dict__[key]) in {str, int, float}):
+                    val_type = type(obj.__class__.__dict__[key])
+                    obj.__dict__[key] = val_type(value)
                 else:
-                    obj.__dict__[k] = v
-        storage.save()
+                    obj.__dict__[key] = value
+            storage.save()
+
 
 if __name__ == "__main__":
-    MyConsole().cmdloop()
+    CustomConsole().cmdloop()

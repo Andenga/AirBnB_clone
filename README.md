@@ -1,89 +1,60 @@
-# AirBnB Clone - Command Interpreter
+AirBnB Clone Project
+The AirBnB Clone project is a Python-based implementation of a command-line interface (CLI) for managing AirBnB objects. This project is part of a larger effort to create a full web application that mimics the functionality of the popular AirBnB platform. The command interpreter is the first step in building this application and will be used throughout the subsequent projects.
 
-## Project Description
+Command Interpreter
+The command interpreter is a Python-based program that allows you to interact with the AirBnB objects through a command-line interface. It enables you to create, retrieve, update, and delete objects of various types, such as users, states, cities, places, and more. The command interpreter is designed to support various actions to manage the AirBnB objects efficiently.
 
-The AirBnB Clone project is an ambitious endeavor to create a web application that emulates the functionality of the popular platform Airbnb. The project aims to develop a full-fledged AirBnB clone with features like property listings, user accounts, booking management, and more. The Command Interpreter is a fundamental part of this project, providing a command-line interface for managing AirBnB objects, such as users, states, cities, places, and more.
+How to Start the Command Interpreter
+To start the command interpreter, follow these steps:
 
-## Command Interpreter
+Clone the GitHub repository to your local machine:
 
-The Command Interpreter is designed to facilitate the management of AirBnB objects within the project. It provides the following functionalities:
+bash
+Copy code
+git clone https://github.com/yourusername/AirBnB_clone.git
+Navigate to the project directory:
 
-- **Create**: Allows you to create new objects of different types, such as User, State, City, Place, and more.
+bash
+Copy code
+cd AirBnB_clone
+Launch the command interpreter:
 
-- **Retrieve**: Enables you to retrieve objects from a file or database. You can retrieve all objects of a specific type or a single object by its ID.
+bash
+Copy code
+./console.py
+You will see a prompt (hbnb) indicating that the command interpreter is ready for your input.
 
-- **Update**: Allows you to update attributes of existing objects. You can modify attributes like name, description, or any other relevant information.
+How to Use the Command Interpreter
+The command interpreter supports various commands to interact with AirBnB objects. You can use the following commands:
 
-- **Delete**: Provides the capability to delete objects by specifying their type and ID.
+create: Create a new object.
+show: Show the details of an object.
+destroy: Delete an object.
+all: List all objects or objects of a specific type.
+update: Update the attributes of an object.
+Type help inside the interpreter for a list of available commands and their descriptions.
 
-### How to Start It
+Examples
+Here are some examples of how to use the command interpreter:
 
-To start the AirBnB Clone Command Interpreter, follow these steps:
+Creating a new user object:
 
-1. Clone the repository to your local machine:
+sql
+Copy code
+(hbnb) create User
+Listing all city objects:
 
-   ```bash
-   git clone https://github.com/Andenga/AirBnB-Clone.git
-   ```
+scss
+Copy code
+(hbnb) all City
+Updating the name attribute of a user object with ID "123":
 
-2. Navigate to the project directory:
+sql
+Copy code
+(hbnb) update User 123 name "John Doe"
+Showing the details of a specific place object with ID "456":
 
-   ```bash
-   cd AirBnB-Clone
-   ```
-
-3. Start the command interpreter:
-
-   ```bash
-   ./console.py
-   ```
-
-### How to Use It
-
-The Command Interpreter operates in both interactive and non-interactive modes.
-
-- **Interactive Mode**: In this mode, you will be presented with a prompt, `(hbnb)`, where you can enter commands and receive immediate responses.
-
-- **Non-Interactive Mode**: You can also use the command interpreter to execute commands from a file or script. For example, you can run a list of commands from a text file.
-
-### Examples
-
-#### Interactive Mode
-
-Here are some examples of commands you can use in the interactive mode:
-
-- Create a new user:
-
-  ```bash
-  (hbnb) create User
-  ```
-
-- Retrieve all objects of a specific type (e.g., User):
-
-  ```bash
-  (hbnb) all User
-  ```
-
-- Update an attribute of an object:
-
-  ```bash
-  (hbnb) update User 12345 first_name "John"
-  ```
-
-- Delete an object:
-
-  ```bash
-  (hbnb) destroy User 12345
-  ```
-
-#### Non-Interactive Mode
-
-You can also use the Command Interpreter in non-interactive mode by providing commands in a file. For example, you can run a list of commands stored in a text file:
-
-```bash
-echo "create User" | ./console.py
-```
-
-## Authors
-
-This project is a made by me Lydia Andenga
+scss
+Copy code
+(hbnb) show Place 456
+For more examples and usage scenarios, please refer to the documentation or help command within the command interpreter.
