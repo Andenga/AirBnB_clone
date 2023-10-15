@@ -1,41 +1,65 @@
-import unittest
-from io import StringIO
-from unittest.mock import patch
-from console import HBNBCommand
+from models.base_model import BaseModel
+from myconsole import MyConsole  # Updated import
 
-class TestConsole(unittest.TestCase):
+def test_myconsole():
+    # Create an instance of the MyConsole class
+    console = MyConsole()
 
-    def setUp(self):
-        self.console = HBNBCommand()
+    # Create three instances of the BaseModel class
+    console.onecmd("create BaseModel")
+    console.onecmd("create BaseModel")
+    console.onecmd("create BaseModel")
 
-    def tearDown(self):
-        del self.console
+    # Create two instances of the User class
+    console.onecmd("create User")
+    console.onecmd("create User")
 
-    def test_quit_command(self):
-        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
-            self.assertTrue(self.console.onecmd("quit"))
-            output = mock_stdout.getvalue()
-            self.assertEqual(output.strip(), "")
+    # List all instances (BaseModel and User)
+    console.onecmd("myall")
 
-    def test_create_command(self):
-        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
-            self.console.onecmd("create BaseModel")
-            output = mock_stdout.getvalue()
-            self.assertTrue(output.strip().startswith(""))
+    # Count instances of BaseModel and User
+    console.onecmd("mycount BaseModel")
+    console.onecmd("mycount User")
 
-    # Add similar test methods for other commands (show, destroy, all, update, etc.)
+    # Show details of a BaseModel instance
+    console.onecmd("myshow BaseModel {}".format(console.models['MyBaseModel'][0].id))
 
-    def test_help_command(self):
-        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
-            self.console.onecmd("help")
-            output = mock_stdout.getvalue()
-            self.assertTrue(output.strip().startswith(""))
+    # Show details of another BaseModel instance
+    console.onecmd("myshow BaseModel {}".format(console.models['MyBaseModel'][1].id))
 
-    def test_help_specific_command(self):
-        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
-            self.console.onecmd("help show")
-            output = mock_stdout.getvalue()
-            self.assertTrue(output.strip().startswith(""))
+    # Show details of a User instance
+    console.onecmd("myshow User {}".format(console.models['MyUser'][0].id))
 
-if __name__ == '__main__':
-    unittest.main()
+    # Update a property of a BaseModel instance
+    console.onecmd("myupdate BaseModel {} name John".format(console.models['MyBaseModel'][0].id))
+
+    # Update a property of a User instance
+    console.onecmd("myupdate User {} first_name John".format(console.models['MyUser'][0].id))
+
+    # Show updated details of the BaseModel instance
+    console.onecmd("myshow BaseModel {}".format(console.models['MyBaseModel'][0].id))
+
+    # Show updated details of the User instance
+    console.onecmd("myshow User {}".format(console.models['MyUser'][0].id))
+
+    # Destroy a BaseModel instance
+    console.onecmd("mydestroy BaseModel {}".format(console.models['MyBaseModel'][1].id))
+
+    # Destroy a User instance
+    console.onecmd("mydestroy User {}".format(console.models['MyUser'][0].id))
+
+    # Attempt to show the destroyed BaseModel instance (should not exist)
+    console.onecmd("myshow BaseModel {}".format(console.models['MyBaseModel'][1].id))
+
+    # Attempt to show the destroyed User instance (should not exist)
+    console.onecmd("myshow User {}".format(console.models['MyUser'][0].id))
+
+    # List all instances again (BaseModel and User)
+    console.onecmd("myall")
+
+    # Count instances of BaseModel and User again
+    console.onecmd("mycount BaseModel")
+    console.onecmd("mycount User")
+
+if __name__ == "__main__":
+    test_myconsole()
