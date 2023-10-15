@@ -11,7 +11,7 @@ Clone the GitHub repository to your local machine:
 
 bash
 Copy code
-git clone https://github.com/yourusername/AirBnB_clone.git
+git clone https://github.com/andenga/AirBnB_clone.git
 Navigate to the project directory:
 
 bash
